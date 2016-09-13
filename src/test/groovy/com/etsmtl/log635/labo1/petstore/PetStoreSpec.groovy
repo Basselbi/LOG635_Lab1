@@ -1,5 +1,6 @@
 package com.etsmtl.log635.labo1.petstore
 
+
 import groovy.util.logging.Slf4j
 import org.kie.api.KieServices
 import org.kie.api.runtime.KieSession
@@ -273,13 +274,13 @@ class PetStoreSpec extends Specification {
         then:
         order.discounts.findAll { d ->
             d.items*.product.contains(products['cubeaqua']) &&
-            d.reason == "buy ten fish get a tank half off"
-            d.percentage = 0.5D
+            d.reason == "buy ten fish get a tank half off" &&
+            d.percentage == 0.5D
         }.size() == 1
     }
 
     // @IgnoreRest : Indicates that all feature methods except the ones carrying this annotation should be ignored.
-    @IgnoreRest
+    //@IgnoreRest
     def "should apply sales tax properly"() {
         setup:
         def order = new Order(
