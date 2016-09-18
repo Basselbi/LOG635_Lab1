@@ -1,0 +1,24 @@
+package com.etsmtl.log635.labo1.investigation
+
+import org.slf4j.Logger
+import com.etsmtl.log635.labo1.helloworld.*
+
+global Logger log;
+
+rule "Say Hello"
+    when
+        $m: Message(status == MessageStatus.HELLO, $currentMsg: message)
+    then
+        System.out.println($currentMsg);
+        $m.setStatus(MessageStatus.GOODBYE);
+
+        update($m);
+end
+
+rule "Say Goodbye"
+    when
+        $m: Message(status == MessageStatus.GOODBYE, $currentMsg: message)
+    then
+        $m.setMessage("Goodbye cruel world");
+        System.out.println($m.getMessage());
+end

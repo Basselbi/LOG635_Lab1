@@ -9,4 +9,8 @@
     <kbase name="PetStoreKB" packages="com.etsmtl.log635.labo1.petstore">
         <ksession name="PetStoreKS"/>
     </kbase>
+
+    <kbase name="InvestigationKB" packages="com.etsmtl.log635.labo1.investigation">
+        <ksession name="InvestigationKS"/>
+    </kbase>
 </kmodule>
