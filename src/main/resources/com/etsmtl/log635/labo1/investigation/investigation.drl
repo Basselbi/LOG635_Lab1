@@ -35,3 +35,31 @@ rule "Test"
         $s.setNom($pers.getNom());
         $s.setSuspect(true);
 end
+
+rule "Personnage détient arme du crime"
+    when
+        Crime(objet != null, $arme: objet)
+        Personnage(
+            $nomArme: getArme().nom)
+        $p: Personnage()
+        eval($nomArme ==  $arme)
+    then
+        $p.setSuspect(true);//Should be "setHasCrimeWeapon()"
+        System.out.println("Personnage "+ $p.getNom() + "détient l'arme du crime.");
+        update($p)
+ end
+
+ rule "Personnage était sur le lieu du crime"
+    when
+        Crime(datetimeFrom != null, $startTime: datetimeFrom)
+        Crime(datetimeTo != null, $endTime: datetimeTo)
+        Crime(lieu != null, $lieu: lieu)
+        Evenement(lieu != null)
+        Evenement(lieu == $lieu)
+        Evenement(personnage != null, $p: personnage)
+    then
+        $p.setSuspect(true);  ///Should be setWasAtCrimeScene
+        System.out.println("Personnage "+ $p.getNom() + "était sur le lieu du crime.");
+        update($p);
+ end
+

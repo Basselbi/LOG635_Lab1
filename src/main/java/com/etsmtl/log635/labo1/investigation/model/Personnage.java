@@ -10,6 +10,10 @@ public class Personnage implements Comparable {
     private boolean isDead;
     private boolean isSuspect;
 
+
+
+    private String arme = null;
+
     public Personnage(String nom, boolean isDead, boolean isSuspect) {
         this.nom = nom;
         this.isDead = isDead;
@@ -38,6 +42,14 @@ public class Personnage implements Comparable {
 
     public void setSuspect(boolean suspect) {
         isSuspect = suspect;
+    }
+
+    public String getArme() {
+        return arme;
+    }
+
+    public void setArme(String arme) {
+        this.arme = arme;
     }
 
 
