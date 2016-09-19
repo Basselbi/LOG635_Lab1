@@ -8,6 +8,10 @@ import org.joda.time.DateTime;
 public class Crime extends Evenement {
 
     public Crime(Personnage personnage, Lieu lieu, DateTime datetimeFrom, DateTime datetimeTo, Objet objet) {
-        super(personnage, lieu, datetimeFrom, datetimeTo, objet);
+        super(null, personnage, lieu, datetimeFrom, datetimeTo, objet);
+    }
+
+    public Crime() {
+        super(null, null, null, null, null, null);
     }
 }

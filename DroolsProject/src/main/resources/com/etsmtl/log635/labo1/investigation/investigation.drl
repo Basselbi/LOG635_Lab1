@@ -6,6 +6,25 @@ import com.etsmtl.log635.labo1.investigation.model.*
 
 global Logger log;
 
+rule "Lieu du crime"
+    when
+        Evenement(name.equals("crime"),lieu != null, $lieu: lieu)
+        $crime: Crime()
+    then
+        $crime.setLieu($lieu);
+        System.out.println("Le lieu du crime est "+$crime.getLieu().getName());
+end
+
+rule "Heure du crime"
+    when
+        Evenement(name.equals("crime"),lieu != null, $lieu: lieu)
+        $crime: Crime()
+    then
+        $crime.setLieu($lieu);
+        System.out.println("Le lieu du crime est "+$crime.getLieu().getName());
+end
+
+
 rule "Test"
     when
         Crime(lieu != null, $lieu: lieu)

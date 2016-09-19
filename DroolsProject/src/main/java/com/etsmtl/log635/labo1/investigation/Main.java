@@ -30,34 +30,24 @@ public class Main {
 //        ));
 
         //(is-dead zenon)
-        evenements.add(new Evenement(
-                new Personnage("Zenon", true, false),
-                null,
-                null,
-                null,
-                null
-        ));
+        ksession.insert(new Personnage("Zenon", true, false));
+
 
 //        (meurtre from-t 1 to-t 4)
-        evenements.add(new Crime(
+        ksession.insert(new Crime(
                 null,
                 null,
                 new DateTime(2015, 9, 22, 1, 0),
                 new DateTime(2015, 9, 22, 4, 0),
                 null
-        ));
+                ));
 
 //        (meurtre at-loc bluemountain)
-        evenements.add(new Crime(
-                null,
-                new Lieu("bluemountain"),
-                null,
-                null,
-                null
-        ));
+
 
 //        (at-loc denis bluemountain from-t 18 to-t 20)
         evenements.add(new Evenement(
+                null,
                 new Personnage("Denis", false, false),
                 new Lieu("bluemountain"),
                 new DateTime(2015, 9, 22, 18, 0),
@@ -67,15 +57,17 @@ public class Main {
 
 //        (at-loc daniel bluemountain at-time 2)
         evenements.add(new Evenement(
+                null,
                 new Personnage("Daniel", false, false),
                 new Lieu("bluemountain"),
                 new DateTime(2015, 9, 22, 2, 0),
-                null,
+                new DateTime(2015, 9, 22, 2, 0),
                 null
         ));
 
 //        (meurtre instr couteau)
-        evenements.add(new Crime(
+        evenements.add(new Evenement(
+                "crime",
                 null,
                 null,
                 null,
@@ -85,6 +77,7 @@ public class Main {
 
 //        (have daniel couteau)
         evenements.add(new Evenement(
+                null,
                 new Personnage("Daniel", false, false),
                 null,
                 null,
@@ -99,6 +92,9 @@ public class Main {
 
         Personnage suspect = new Personnage(null, false, false);
         ksession.insert(suspect);
+
+        Crime crime = new Crime();
+        ksession.insert(crime);
 
         // and fire the rules
         ksession.fireAllRules();

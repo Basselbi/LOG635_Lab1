@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class Evenement {
 
+    private String name;
     private Personnage personnage;
     private Lieu lieu;
     private DateTime datetimeFrom;
@@ -19,7 +20,8 @@ public class Evenement {
     public Evenement() {
     }
 
-    public Evenement(Personnage personnage, Lieu lieu, DateTime datetimeFrom, DateTime datetimeTo, Objet objet) {
+    public Evenement(String name, Personnage personnage, Lieu lieu, DateTime datetimeFrom, DateTime datetimeTo, Objet objet) {
+        this.name = name;
         this.personnage = personnage;
         this.lieu = lieu;
         this.datetimeFrom = datetimeFrom;
@@ -65,5 +67,13 @@ public class Evenement {
 
     public void setObjet(Objet objet) {
         this.objet = objet;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
