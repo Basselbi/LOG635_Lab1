@@ -1,0 +1,23 @@
+package com.etsmtl.log635.labo1.crimesolver;
+dialect  "mvel"
+
+
+rule "crimeSolver"
+    when
+    then
+end
+
+rule "Personnage détient arme du crime"
+    when
+
+    then
+        System.out.println("Personnage "+  "détient l'arme du crime.");
+ end
+
+ rule "Personnage était sur le lieu du crime"
+    when
+
+    then
+        drools.halt();
+
+ end
