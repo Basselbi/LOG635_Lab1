@@ -2,23 +2,36 @@ package com.etsmtl.log635.labo1.investigation
 
 import org.slf4j.Logger
 import com.etsmtl.log635.labo1.helloworld.*
+import com.etsmtl.log635.labo1.investigation.model.*
 
 global Logger log;
 
-rule "Say Hello"
+rule "Test"
     when
-        $m: Message(status == MessageStatus.HELLO, $currentMsg: message)
+        Crime(lieu != null, $lieu: lieu)
+        Crime(datetimeFrom != null, datetimeTo != null, $dtFrom: datetimeFrom, $dtTo: datetimeTo)
+        Crime(objet != null, $arme: objet)
+        Evenement(
+         lieu.compareTo($lieu) == 0,
+         lieu != null,
+         datetimeTo == null,
+         datetimeFrom != null,
+         $atTime: datetimeFrom,
+         $pers: personnage,
+         personnage != null
+        )
+        eval($atTime.isAfter($dtFrom))
+        eval($atTime.isBefore($dtTo))
+        Evenement(
+            personnage != null,
+            objet != null,
+            personnage.compareTo($pers)==0,
+            objet.compareTo($arme)==0
+        )
+        $s: Personnage(nom == null)
     then
-        System.out.println($currentMsg);
-        $m.setStatus(MessageStatus.GOODBYE);
-
-        update($m);
-end
-
-rule "Say Goodbye"
-    when
-        $m: Message(status == MessageStatus.GOODBYE, $currentMsg: message)
-    then
-        $m.setMessage("Goodbye cruel world");
-        System.out.println($m.getMessage());
+        System.out.println("Personnage "+$pers.getNom()+" is suspect ");
+        $pers.setSuspect(true);
+        $s.setNom($pers.getNom());
+        $s.setSuspect(true);
 end

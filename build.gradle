@@ -34,5 +34,7 @@ dependencies {
     compile "org.drools:drools-compiler:${droolsVersion}"
     compile "ch.qos.logback:logback-classic:1.1.+"
     compile "org.slf4j:slf4j-api:1.7.+"
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.4'
     testCompile "org.spockframework:spock-core:${spockVersion}"
+
 }
