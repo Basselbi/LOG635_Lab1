@@ -8,17 +8,21 @@
 
 
 ; ==== FAITS ====
+;; Daniel est le meurtrier
+;; dimensions prises en compte : heure du crime, localisation, arme
 (deffacts faits
   (personnage zenon suspect);; TODO template default value suspect
   (personnage denis suspect)
   (personnage daniel suspect)
   (personnage fred suspect)
+  (personnage jack suspect)
 	(is-dead zenon)
 	(meurtre from-t 1 to-t 4)
 	(meurtre at-loc bluemountain)
   (at-loc fred bluemountain from-t 18 to-t 20)
 	(at-loc denis lacleman from-t 18 to-t 20)
 	(at-loc daniel bluemountain at-time 2)
+  (at-loc jack bluemountain at-time 2)
 	(meurtre instr couteau)
 	(have daniel couteau)
 )
@@ -45,6 +49,18 @@
 	(declare (salience 40))
   (meurtre at-loc ?loc)
   (at-loc ?pers ~?loc $?)
+  ?f <- (personnage ?pers suspect)
+  =>
+  (retract ?f)
+  (assert (personnage ?pers non-suspect))
+  (printout t ?pers " n'est plus suspecté"  crlf)
+)
+
+(defrule pas-manipule-arme-crime
+	(declare (salience 40))
+  (personnage ?pers suspect)
+  (meurtre instr ?arme)
+  (not (have ?pers ?arme))
   ?f <- (personnage ?pers suspect)
   =>
   (retract ?f)
