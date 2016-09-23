@@ -19,18 +19,24 @@
 	(is-dead zenon)
 	(meurtre from-t 1 to-t 4)
 	(meurtre at-loc bluemountain)
+  (meurtre instr couteau)
+  (meurtre trace cigarette)
+
   (at-loc fred bluemountain from-t 18 to-t 20)
 	(at-loc denis lacleman from-t 18 to-t 20)
 	(at-loc daniel bluemountain at-time 2)
   (at-loc jack bluemountain at-time 2)
-	(meurtre instr couteau)
+
+  (indice cigarette indique fume)
+
+  (personnage daniel fume)
 	(have daniel couteau)
+  (have jack couteau)
 )
 
 
 
 ; ==== REGLES ====
-
 (defrule un-seul-suspect
   (declare (salience 62))
   ?c <- (accumulate (bind ?count 0)                        ;; initializer
@@ -44,6 +50,17 @@
   (halt)
 )
 
+(defrule trace-sur-les-lieux-du-crime
+	(declare (salience 44))
+  (meurtre trace ?indice)
+  (indice ?indice indique ?conclusion)
+  (personnage ?pers ?conclusion)
+  ?f <- (personnage ?perso&:(neq ?pers ?perso) suspect)
+  =>
+  (retract ?f)
+  (assert (personnage ?perso non-suspect))
+  (printout t ?perso " n'est plus suspecté"  crlf)
+)
 
 (defrule non-present-sur-les-lieux-du-crime
 	(declare (salience 40))
