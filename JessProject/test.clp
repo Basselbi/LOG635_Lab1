@@ -16,20 +16,25 @@
   (personnage daniel suspect)
   (personnage fred suspect)
   (personnage jack suspect)
+  (personnage joe suspect)
 	(is-dead zenon)
 	(meurtre from-t 1 to-t 4)
 	(meurtre at-loc bluemountain)
-  (meurtre instr couteau)
+  ;(meurtre instr couteau)
   (meurtre trace cigarette)
+  (meurtre corps trace tranchant)
 
   (at-loc fred bluemountain from-t 18 to-t 20)
 	(at-loc denis lacleman from-t 18 to-t 20)
 	(at-loc daniel bluemountain at-time 2)
   (at-loc jack bluemountain at-time 2)
+  (at-loc joe bluemountain at-time 2)
 
   (indice cigarette indique fume)
+  (arme couteau tranchant)
 
   (personnage daniel fume)
+  (personnage joe fume)
 	(have daniel couteau)
   (have jack couteau)
 )
@@ -54,12 +59,12 @@
 	(declare (salience 44))
   (meurtre trace ?indice)
   (indice ?indice indique ?conclusion)
-  (personnage ?pers ?conclusion)
-  ?f <- (personnage ?perso&:(neq ?pers ?perso) suspect)
+  ?f <- (personnage ?pers suspect)
+  (not (personnage ?pers ?conclusion))
   =>
   (retract ?f)
-  (assert (personnage ?perso non-suspect))
-  (printout t ?perso " n'est plus suspecté"  crlf)
+  (assert (personnage ?pers non-suspect))
+  (printout t ?pers " n'est plus suspecté"  crlf)
 )
 
 (defrule non-present-sur-les-lieux-du-crime
@@ -129,9 +134,23 @@
   (printout t ?pers " n'est plus suspecté"  crlf)
 )
 
-; (watch facts)
-; (watch activations)
-; (watch rules)
+(defrule est-possiblement-arme-crime 
+
+(declare (salience 50))
+
+(meurtre corps trace ?blessure)
+(arme ?item ?blessure)
+
+=>
+
+(assert (meurtre instr ?item))
+(printout t  "L'arme " ?item " est possiblement relie au meurtre." crlf)
+
+)
+
+ ;(watch facts)
+ ;(watch activations)
+ ;(watch rules)
 
 (reset)
 (run)
