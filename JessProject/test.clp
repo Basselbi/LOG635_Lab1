@@ -78,9 +78,6 @@
 
 
 ; ==== REGLES ====
-
-
-
 (defrule position-possible
   (declare (salience 100))
 
@@ -101,6 +98,27 @@
 (assert (at-loc-possible ?pers ?lieu2 at-time (+ ?time 1)))
 (printout t ?pers " at-loc-possible " ?lieu2 crlf)
 
+)
+
+(defrule donner-position-possible
+  (declare (salience 95))
+
+?f1 <- (at-loc ?pers ?lieu1 at-time ?time1)
+?c <- (accumulate (bind ?count 0)                        ;; initializer
+                (bind ?count (+ ?count 1))                    ;; action
+                ?count                                        ;; result
+                (at-loc-possible ?pers ?lieu2 at-time ?time2))
+
+(at-loc-possible ?pers ?lieu2 at-time ?time2)
+
+(test (= ?time2 (+ ?time1 1)))
+(test (<> ?lieu1 ?lieu2))
+(test (= ?c 1))
+
+=>
+
+ (assert (at-loc ?pers ?lieu2 at-time ?time2))
+ (printout t ?pers " est presentement at-loc " ?lieu2 " at-time " ?time2 crlf)
 )
 
 
