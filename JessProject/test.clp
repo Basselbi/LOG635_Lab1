@@ -40,29 +40,37 @@
   (personnage jack suspect)
   (personnage joe suspect)
 	(is-dead zenon)
-	(meurtre from-t 1 to-t 4)
+	(meurtre from-t 17 to-t 20)
 	(meurtre at-loc bluemountain)
   ;(meurtre instr couteau)
   (meurtre trace cigarette)
   (meurtre corps trace tranchant)
 
-  (at-loc fred bluemountain from-t 18 to-t 20)
-	(at-loc denis lacleman from-t 18 to-t 20)
+  (at-loc fred bluemountain from-t 10 to-t 15)
+	(at-loc denis lacleman from-t 10 to-t 15)
 	; (at-loc daniel bluemountain at-time 2)
  ;  (at-loc jack bluemountain at-time 2)
  ;  (at-loc joe bluemountain at-time 2)
 
-  (at-loc daniel yellowmountain at-time 20)
-  (at-loc joe greenmountain at-time 20)
-  (at-loc jack redmountain at-time 20)
+  ;(at-loc daniel yellowmountain at-time 13)
+  (at-loc joe greenmountain at-time 13)
+  (at-loc jack redmountain at-time 13)
 
-  (chemin yellowmountain bluemountain)
+  ;(chemin yellowmountain bluemountain)
   (chemin greenmountain bluemountain)
   (chemin redmountain bluemountain)
   (chemin redmountain purplemountain)
+  ;(chemin orangemountain yellowmountain)
 
   (at-loc-interdiction pleu purplemountain)
-  (at-loc-evenement pleu purplemountain) 
+  (at-loc-evenement pleu purplemountain)
+
+  (loc bluemountain nb-pers-max 1)
+  (loc yellowmountain nb-pers-max 1)
+  (loc greenmountain nb-pers-max 1)
+  (loc redmountain nb-pers-max 1)
+  (loc orangemountain nb-pers-max 1)
+  (loc purplemountain nb-pers-max 1)
 
   (indice cigarette indique fume)
   (arme couteau tranchant)
@@ -86,8 +94,11 @@
         (chemin ?lieu2 ?lieu)
 )
 
+(meurtre from-t ?min to-t ?max)
+
 (time ?time2)
 (test (= ?time2 (+ ?time 1)))
+(test (>= ?max ?time2))
 
 (not (at-loc-possible ?pers ?lieu2 at-time ?time2))
 (not (exists (generation-at-loc-terminer)))
@@ -111,7 +122,6 @@
 =>
 
   (assert (generation-at-loc-terminer))
-  (printout t "generation-at-loc-terminer" crlf)
 )
 
 (defrule interdir-position-possible-selon-evenement
@@ -127,16 +137,38 @@
   (printout t ?pers " ne peut pas aller a " ?lieu " parce que " ?evenement crlf)
 )
 
-(defrule donner-position-possible
-  (declare (salience 95))
+(defrule interdir-position-possible-selon-nb-personne
+  (declare (salience 98))
 
-?f1 <- (at-loc ?pers ?lieu1 at-time ?time1)
-?c <- (accumulate (bind ?count 0)                        ;; initializer
+  ?f1 <- (at-loc-possible ?pers ?lieu at-time ?time)
+  (loc ?lieu nb-pers-max ?max)
+
+  ?c <- (accumulate (bind ?count 0)                        ;; initializer
+                (bind ?count (+ ?count 1))                    ;; action
+                ?count                                        ;; result
+                (and
+                  (at-loc ?pers2 ?lieu at-time ?time)
+                  (test (<> ?pers ?pers2))
+                )
+        )
+  
+  (test (= ?c ?max))
+=>
+
+  (retract ?f1)
+  (printout t ?pers " ne peut pas aller a " ?lieu " parce que le nb max de personne est atteint." crlf)
+)
+
+(defrule donner-position-possible
+  (declare (salience 97))
+
+  (at-loc ?pers ?lieu1 at-time ?time1)
+  ?c <- (accumulate (bind ?count 0)                        ;; initializer
                 (bind ?count (+ ?count 1))                    ;; action
                 ?count                                        ;; result
                 (at-loc-possible ?pers ?lieu2 at-time ?time2))
 
-(at-loc-possible ?pers ?lieu2 at-time ?time2)
+  ?f1 <- (at-loc-possible ?pers ?lieu2 at-time ?time2)
 
 (test (= ?time2 (+ ?time1 1)))
 (test (<> ?lieu1 ?lieu2))
@@ -144,6 +176,7 @@
 
 =>
 
+ (retract ?f1)
  (assert (at-loc ?pers ?lieu2 at-time ?time2))
  (printout t ?pers " est presentement at-loc " ?lieu2 " at-time " ?time2 crlf)
 )
