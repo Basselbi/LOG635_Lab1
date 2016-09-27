@@ -1,12 +1,6 @@
 ; Suppression des faits
 (clear)
 
-
-;;TODO nouveaux faits possibles
-;; - Rajouter la date
-;; -
-
-
 ; ==== FAITS ====
 ;; Daniel est le meurtrier
 ;; dimensions prises en compte : heure du crime, localisation, arme
@@ -65,6 +59,10 @@
   (chemin yellowmountain bluemountain)
   (chemin greenmountain bluemountain)
   (chemin redmountain bluemountain)
+  (chemin redmountain purplemountain)
+
+  (at-loc-interdiction pleu purplemountain)
+  (at-loc-evenement pleu purplemountain) 
 
   (indice cigarette indique fume)
   (arme couteau tranchant)
@@ -92,12 +90,41 @@
 (test (= ?time2 (+ ?time 1)))
 
 (not (at-loc-possible ?pers ?lieu2 at-time ?time2))
-
+(not (exists (generation-at-loc-terminer)))
 =>
 
 (assert (at-loc-possible ?pers ?lieu2 at-time (+ ?time 1)))
 (printout t ?pers " at-loc-possible " ?lieu2 crlf)
 
+)
+
+(defrule interdir-generation-position-possible 
+ (declare (salience 99))
+
+  ?c <- (accumulate (bind ?count 0)                           ;; initializer
+                (bind ?count (+ ?count 1))                    ;; action
+                ?count                                        ;; result
+                (at-loc-possible ?pers ?lieu at-time ?time))
+ (test (> ?c 0))
+ (not (exists (generation-at-loc-terminer)))
+
+=>
+
+  (assert (generation-at-loc-terminer))
+  (printout t "generation-at-loc-terminer" crlf)
+)
+
+(defrule interdir-position-possible-selon-evenement
+  (declare (salience 98))
+
+  ?f1 <- (at-loc-possible ?pers ?lieu at-time ?time)
+  (at-loc-interdiction ?evenement ?lieu)
+  (at-loc-evenement ?evenement ?lieu) 
+
+=>
+
+  (retract ?f1)
+  (printout t ?pers " ne peut pas aller a " ?lieu " parce que " ?evenement crlf)
 )
 
 (defrule donner-position-possible
