@@ -57,9 +57,9 @@
   (at-loc jack redmountain at-time 13)
 
   ;(chemin yellowmountain bluemountain)
-  (chemin greenmountain bluemountain)
-  (chemin redmountain bluemountain)
-  (chemin redmountain purplemountain)
+  (chemin greenmountain bluemountain distance 50)
+  (chemin redmountain bluemountain distance 50)
+  (chemin redmountain purplemountain distance 50)
   ;(chemin orangemountain yellowmountain)
 
   (at-loc-interdiction pleu purplemountain)
@@ -90,8 +90,8 @@
 (at-loc ?pers ?lieu at-time ?time)
 
 (or 
-        (chemin ?lieu ?lieu2)
-        (chemin ?lieu2 ?lieu)
+        (chemin ?lieu ?lieu2 distance ?distance)
+        (chemin ?lieu2 ?lieu distance ?distance)
 )
 
 (meurtre from-t ?min to-t ?max)
@@ -143,7 +143,7 @@
   ?f1 <- (at-loc-possible ?pers ?lieu at-time ?time)
   (loc ?lieu nb-pers-max ?max)
 
-  ?c <- (accumulate (bind ?count 0)                        ;; initializer
+  ?c1 <- (accumulate (bind ?count 0)                        ;; initializer
                 (bind ?count (+ ?count 1))                    ;; action
                 ?count                                        ;; result
                 (and
@@ -152,9 +152,20 @@
                 )
         )
   
-  (test (= ?c ?max))
-=>
+  ?c2 <- (accumulate (bind ?count 0)                        ;; initializer
+              (bind ?count (+ ?count 1))                    ;; action
+              ?count                                        ;; result
+              (and 
+                (at-loc ?pers3 ?lieu from-t ?from to-t ?to)
+                (test (<> ?pers ?pers3))
+                (test (>= ?time ?from))
+                (test (<= ?time ?to))
+              )
+      )
 
+
+  (test (= ?max (+ ?c1 ?c2)))
+=>
   (retract ?f1)
   (printout t ?pers " ne peut pas aller a " ?lieu " parce que le nb max de personne est atteint." crlf)
 )
@@ -180,6 +191,23 @@
  (assert (at-loc ?pers ?lieu2 at-time ?time2))
  (printout t ?pers " est presentement at-loc " ?lieu2 " at-time " ?time2 crlf)
 )
+
+; (defrule distance-parcouru 
+;   (declare (salience 100))
+
+; ?c <- (accumulate (bind ?count 0)                        ;; initializer
+;                 (bind ?count (+ ?count 1))                    ;; action
+;                 ?count                                        ;; result
+;                 (and
+;                   (at-loc ?pers ?lieu at-time ?time)
+;                 )
+;         )
+
+
+  
+; =>
+;   (printout t  ?pers " s'est deplacer " ?c " fois. " crlf)
+; )
 
 
 (defrule un-seul-suspect
