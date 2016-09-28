@@ -84,10 +84,13 @@
 
 
 ; ==== REGLES ====
-(defrule position-possible
+(defrule generation-position-possible
   (declare (salience 100))
 
-(at-loc ?pers ?lieu at-time ?time)
+(or 
+ (at-loc ?pers ?lieu at-time ?time)
+ (at-loc ?pers ?lieu from-t $? to-t ?time)
+)
 
 (or 
         (chemin ?lieu ?lieu2 distance ?distance)
@@ -103,10 +106,8 @@
 (not (at-loc-possible ?pers ?lieu2 at-time ?time2))
 (not (exists (generation-at-loc-terminer)))
 =>
-
 (assert (at-loc-possible ?pers ?lieu2 at-time (+ ?time 1)))
 (printout t ?pers " at-loc-possible " ?lieu2 crlf)
-
 )
 
 (defrule interdir-generation-position-possible 
